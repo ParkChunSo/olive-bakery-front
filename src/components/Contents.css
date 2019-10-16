@@ -1,0 +1,17 @@
+.explanation {
+	background-color: white;
+}
+.left {
+	width: 60%;
+	float: left;
+}
+.contents {
+	padding: 10%;
+}
+.right {
+	width: 40%;
+	float: right;
+}
+.img3 {
+	max-width: 100%;
+}

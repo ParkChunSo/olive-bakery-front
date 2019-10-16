@@ -1,0 +1,10 @@
+export { default as HomePage } from './HomePage';
+export { default as ProductsPage } from './ProductsPage';
+export { default as SignInPage } from './SignInPage';
+export { default as MyPagePage } from './MyPagePage';
+export { default as AdminProductsPage} from './Admin/AdminProductsPage';
+export { default as AdminBoardPage} from './Admin/AdminBoardPage';
+export { default as AdminUsersPage} from './Admin/AdminUsersPage';
+export { default as AdminReservationPage} from './Admin/AdminReservationPage';
+export { default as BoardPage} from './BoardPage';
+export { default as AdminDashboardPage} from './Admin/AdminDashboardPage';

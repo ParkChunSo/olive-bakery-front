@@ -1,0 +1,84 @@
+.contents2_main {
+	background-image: url("http://olivebakery.kr/wp-content/uploads/2015/02/backgroun-bread.png");
+	background-position: center center;
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+
+	padding-top: 195px;
+	padding-bottom: 175px;
+	padding-left: 5%;
+	padding-right: 5%;
+	background-color: #8eb28f;
+
+	max-width: 100%;
+
+	clear: both;
+}
+.contents2_main p {
+	text-align: center;
+}
+.contents2 h2 {
+	text-align: center;
+}
+.card {
+	width: 22%;
+	margin-right: 4%;
+
+	float: left;
+	position: relative;
+}
+.blank {
+	margin-right: auto;
+	margin-left: auto;
+	margin-top: 200px;
+
+	clear: both;
+}
+.card_contents1 {
+	background-image: url("http://olivebakery.kr/wp-content/uploads/2015/02/organic-1.jpg");
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-size: cover;
+
+	padding: 0px 20px 0px 20px;
+	float: left;
+}
+
+.card_contents2 {
+	background-image: url("http://olivebakery.kr/wp-content/uploads/2015/02/poolish2.jpg");
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-size: cover;
+
+	padding: 0px 20px 0px 20px;
+	float: left;
+}
+
+.card_contents3 {
+	background-image: url("http://olivebakery.kr/wp-content/uploads/2015/02/milkbutter3.jpg");
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-size: cover;
+
+	padding: 0px 20px 0px 20px;
+	float: left;
+}
+
+.card_contents4 {
+	background-image: url("http://olivebakery.kr/wp-content/uploads/2015/02/everymoning.jpg");
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-size: cover;
+
+	padding: 0px 20px 0px 20px;
+	float: left;
+}
+
+.card p {
+	text-align: center;
+}
+
+.card h2 {
+	text-align: center;
+}
