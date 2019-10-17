@@ -66,6 +66,7 @@ class AdminUsers extends React.Component {
         ).then(response => {
             //this.props.onReceive(response.data.number);
             if(response.status===200) {
+                console.log(response.data);
                 this.setState({
                     users: response.data.map(data=>({...data, checked:'false'}))
                 });
@@ -80,7 +81,7 @@ class AdminUsers extends React.Component {
     };
     handleClickOpen = (id) => {
         const {users} = this.state;
-        const item = users.filter(user => user.email === id)[0];
+        const item = users.filter(user => user.id === id)[0];
         this.setState({
             selectedItem: item
         });
@@ -101,7 +102,7 @@ class AdminUsers extends React.Component {
                 });
             else
                 this.setState({
-                    checkedList: this.state.checkedList.concat(this.state.users.filter(user => user.email===e.target.id)[0]),
+                    checkedList: this.state.checkedList.concat(this.state.users.filter(user => user.id===e.target.id)[0]),
                     users: this.state.users.map(
                         user => user.name===e.target.id
                             ?
@@ -123,9 +124,9 @@ class AdminUsers extends React.Component {
                 });
             else
                 this.setState({
-                    checkedList: this.state.checkedList.filter(user => user.email!==e.target.id),
+                    checkedList: this.state.checkedList.filter(user => user.id!==e.target.id),
                     users: this.state.users.map(
-                        user => user.email===e.target.id
+                        user => user.id===e.target.id
                             ?
                             ({...user, checked: 'false'})
                             :
@@ -139,7 +140,7 @@ class AdminUsers extends React.Component {
         const { classes } = this.props;
         const { users } = this.state;
         const u = users.map(user => (
-            [user.email, user.name, user.phoneNumber, user.checked]
+            [user.id, user.name, user.phoneNumber, user.checked]
         ));
         return (
             <React.Fragment>
