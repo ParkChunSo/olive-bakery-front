@@ -100,17 +100,18 @@ class AdminUsers extends React.Component {
                     ),
                     checkedList: this.state.users.map(user=> user)
                 });
-            else
+            else {
                 this.setState({
-                    checkedList: this.state.checkedList.concat(this.state.users.filter(user => user.id===e.target.id)[0]),
+                    checkedList: this.state.checkedList.concat(this.state.users.filter(user => user.id === e.target.id)[0]),
                     users: this.state.users.map(
-                        user => user.name===e.target.id
+                        user => user.id === e.target.id
                             ?
                             ({...user, checked: 'true'})
                             :
                             user
                     )
                 });
+            }
         }
         else{
             if(e.target.id==='isAllCheck')

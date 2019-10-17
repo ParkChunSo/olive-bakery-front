@@ -120,9 +120,7 @@ class AdminBoard extends React.Component {
         let success = '공지사항 삭제완료: ';
         let fail = '실패: ';
         checkedList.map((board, index, array) => (
-            axios.delete(`http://15.164.57.47:8080/olive/board/id/${board.boardId}`,{
-                    headers: { 'Content-type': 'application/json', 'Authorization': token}
-                }
+            axios.delete(`http://15.164.57.47:8080/olive/board/id/${board.boardId}`,{headers: { 'Content-type': 'application/json', 'Authorization': token}}
             ).then(response => {
                 if(response.status===200)
                     success = success+' '+board.boardId.toString();
@@ -151,13 +149,13 @@ class AdminBoard extends React.Component {
                 //this.props.onReceive(response.data.number);
                 if(response.status===200) {
                     axios.put('http://15.164.57.47:8080/olive/board', {
-                        headers: {'Content-type': 'application/json',},
-                        "boardId": response.data.posts.boardId,
-                        "context": response.data.posts.context,
-                        "isNotice": isNotice,
-                        "isSecret": 'false',
-                        "title": response.data.posts.title
-                    }).then(response => {
+                        "boardId": response.data.boardId,
+                        "context": response.data.context,
+                        "notice": isNotice,
+                        "secret": false,
+                        "title": response.data.title
+                    },
+                        {headers: { 'Content-type': 'application/json', 'Authorization': token}}).then(response => {
                         //this.props.onReceive(response.data.number);
                         if(response.status===200)
                             success = success+' '+board.boardId.toString();
@@ -482,10 +480,10 @@ class AdminBoard extends React.Component {
                                         <Button color="rose" onClick={this.deleteBoard} simple size="lg">
                                             게시물 삭제
                                         </Button>
-                                        <Button color="primary" onClick={()=>this.putBoard('true')} simple size="lg">
+                                        <Button color="primary" onClick={()=>this.putBoard(true)} simple size="lg">
                                             공지사항 등록
                                         </Button>
-                                        <Button color="info" onClick={()=>this.putBoard('false')} simple size="lg">
+                                        <Button color="info" onClick={()=>this.putBoard(false)} simple size="lg">
                                             공지사항 해제
                                         </Button>
                                     </div>

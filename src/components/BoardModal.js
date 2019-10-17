@@ -24,6 +24,7 @@ import checkStyles from "../react-kit/assets/jss/material-kit-react/customCheckb
 
 let email = null;
 let styles = {...checkStyles};
+const token = storage.get('token');
 
 class BoardModal extends React.Component {
     state = {
@@ -63,13 +64,13 @@ class BoardModal extends React.Component {
     putBoard = () => {
         if(this.email===this.props.item.posts.userId || this.props.isAdmin===true) {
             axios.put('http://15.164.57.47:8080/olive/board', {
-                headers: {'Content-type': 'application/json',},
                 "boardId": this.props.item.posts.boardId,
                 "context": this.state.context,
-                "isNotice": this.state.isNotice,
-                "isSecret": this.state.isSecret,
+                "notice": this.state.isNotice==='true',
+                "secret": this.state.isSecret==='true',
                 "title": this.state.Title
-            }).then(response => {
+            },
+                {headers: { 'Content-type': 'application/json', 'Authorization': token}}).then(response => {
                 //this.props.onReceive(response.data.number);
                 if (response.status === 200) {
                     this.props.addAlert(`게시물 ${this.props.item.posts.boardId.toString()} 수정완료`);

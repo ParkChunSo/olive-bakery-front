@@ -56,6 +56,7 @@ let styles = {
 styles = {...styles, ...checkStyles};
 
 let email = null;
+const token = storage.get('token');
 
 class Board extends React.Component {
     state = {
@@ -292,7 +293,7 @@ class Board extends React.Component {
 
     handleClickOpen = (id, type) => {
         axios.get(`http://15.164.57.47:8080/olive/board/id/${id}`
-        ).then(response => {
+        ,{headers: { 'Content-type': 'application/json', 'Authorization': token}}).then(response => {
             //this.props.onReceive(response.data.number);
             if(response.status===200) {
                 this.setState({
