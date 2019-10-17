@@ -56,6 +56,7 @@ let styles = {
 styles = {...styles, ...checkStyles};
 
 let email = null;
+const token = storage.get('token');
 
 class Board extends React.Component {
     state = {

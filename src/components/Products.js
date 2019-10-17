@@ -46,6 +46,7 @@ import bimg1 from '../olive_bakery_img_etc/식빵.jpg';
 import bimg2 from '../olive_bakery_img_etc/단팥빵.jpg';
 import bimg3 from '../olive_bakery_img_etc/마늘빵.jpg';
 import bimg4 from '../olive_bakery_img_etc/소보로빵.JPG';
+import CardFooter from "../react-kit/components/Card/CardFooter.jsx";
 
 const bimg = [bimg1,bimg2, bimg3, bimg4];
 
@@ -87,7 +88,11 @@ const styles = theme => ({
         position: 'relative',
         width: '20%',
         float: 'left'
-    }
+    },
+    cardFooter: {
+        marginLeft: 'auto',
+        marginRight: 'auto'
+    },
 });
 
 class Products extends React.Component {
@@ -101,31 +106,15 @@ class Products extends React.Component {
         SAT: [],
         SUN: [],
         isOpen: false,
-        selectedItem: {},
-        divY: 0,
-        tab: 0
+        selectedItem: {}
     };
     dayTypes = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
-    cart = null;
-    tab = null;
     componentDidMount() {
-        window.addEventListener('scroll', this.handleScroll, true);
         this.getBread();
         this.dayTypes.map(day => (
             this.getDayBread(day)
         ));
     }
-    componentWillUnmount() {
-        window.removeEventListener('scroll', this.handleScroll, true);
-    }
-    handleScroll = () => {
-        if(this.tab.getBoundingClientRect().y<=0) {
-            this.setState({
-                divY: this.cart.getBoundingClientRect().y,
-                tab: this.tab.getBoundingClientRect().y
-            });
-        }
-    };
 
     handleAddItem = (e) => {
         const { CartActions } = this.props;
@@ -152,7 +141,7 @@ class Products extends React.Component {
     };
     toggleModal = () => {
         this.setState({
-           isOpen: !this.state.isOpen
+            isOpen: !this.state.isOpen
         });
     };
     handleClickOpen = (name) => {
@@ -175,16 +164,12 @@ class Products extends React.Component {
         });
     };
 
-    checkPulse = (name) => {
-        const {bread} = this.state;
-
-    };
-
     getDayBread = (day) => {
         axios.get(`http://15.164.57.47:8080/olive/bread/day/${day}`
         ).then(response => {
             //this.props.onReceive(response.data.number);
             if(response.status===200) {
+                console.log('알림창 추가하자');
                 this.setState({
                     [day]: response.data.filter(data=> data.isSoldOut===false)
                 });
@@ -231,24 +216,28 @@ class Products extends React.Component {
                                     <Card className={classes.card} onMouseOver={()=>this.handlePulse(bread.name)}>
                                         <CardActionArea onClick={() => this.handleClickOpen(bread.name)}>
                                             <Pulse spy={this.state.bread.filter(b=>b.name===bread.name)[0]}>
-                                            <img
-                                                style={{
-                                                    height: "180px",
-                                                    width: "100%",
-                                                    display: "block"
-                                                }}
-                                                className={classes.imgCardTop}
-                                                src={bread.imageUrl}
-                                                alt="Card-img-cap"
-                                            />
+                                                <img
+                                                    style={{
+                                                        height: "180px",
+                                                        width: "100%",
+                                                        display: "block"
+                                                    }}
+                                                    className={classes.imgCardTop}
+                                                    src={bread.imageUrl}
+                                                    alt="Card-img-cap"
+                                                />
+
+                                                <CardBody className={classes.cardContent}>
+                                                    <h4 className={classes.cardTitle}>{bread.name}</h4>
+                                                    <p>{bread.description}</p>
+                                                    <p>{bread.price}</p>
+                                                </CardBody>
                                             </Pulse>
                                         </CardActionArea>
-                                        <CardBody className={classes.cardContent}>
-                                            <h4 className={classes.cardTitle}>{bread.name}</h4>
-                                            <p>{bread.description}</p>
-                                            <p>{bread.price}</p>
+                                        <CardFooter className={classes.cardFooter}>
                                             <Button color="primary" value={bread.name} onClick={handleAddItem}>장바구니 담기</Button>
-                                        </CardBody>
+                                        </CardFooter>
+
                                     </Card>
                                 </Grid>
                             ))}
@@ -269,56 +258,68 @@ class Products extends React.Component {
                 <CssBaseline/>
                 <main>
                     <div>
-                    <div className={classes.content}
-                         ref={ref => {
-                             this.tab = ref;
-                         }}
-                    >
-                        <CustomTabs
-                            headerColor="primary"
-                            tabs={tabs}
-                        />
-                    </div>
-                    <Animate
-                        start={() => ({
-                            y: 0
-                        })}
-                        update={() => ({
-                            y: [
-                                 window.innerHeight/2 -this.state.tab - this.cart.clientHeight*3/4
-                            ],
-                            timing: {duration: 750, ease: easeExpOut}
-                        })}
-                    >
-                        {state => {
-                            const {y} = state;
-                            return (
-                                <div className={classes.right}>
-                                    <div
-                                        ref={ref => {
-                                            this.cart = ref;
-                                        }}
-                                        style={{
-                                            float: "left",
-                                            position: "absolute",
-                                            transform: `translate3d(0, ${y}px, 0)`
-                                        }}
-                                    >
-                                        <ShoppingCart
-                                            itemlist={itemlist}
-                                            tot={tot}
-                                            increment={handleIncrement}
-                                            decrement={handleDecrement}
-                                            delItem={handleDelItem}
-                                            addAlert={this.props.addAlert}
-                                        />
+                        <div className={classes.content}>
+                            <Card>
+                                <CardHeader color="primary">
+                                    <h4 className={classes.cardTitleWhite}>상품 관리</h4>
+                                    <p className={classes.cardCategoryWhite}>
+                                        빵 추가 및 수정
+                                    </p>
+                                </CardHeader>
+                                <CardBody>
+                                    <div className={classNames(classes.layout, classes.cardGrid)}>
+                                        {/* End hero unit */}
+                                        <Grid container spacing={40}>
+                                            {recommend.map(bread => (
+                                                <Grid item key={bread.name} sm={6} md={4} lg={4}>
+                                                    <Card className={classes.card} onMouseOver={()=>this.handlePulse(bread.name)}>
+                                                        <CardActionArea onClick={() => this.handleClickOpen(bread.name)}>
+                                                            <Pulse spy={this.state.bread.filter(b=>b.name===bread.name)[0]}>
+                                                                <img
+                                                                    style={{
+                                                                        height: "180px",
+                                                                        width: "100%",
+                                                                        display: "block"
+                                                                    }}
+                                                                    className={classes.imgCardTop}
+                                                                    src={bread.imageUrl}
+                                                                    alt="Card-img-cap"
+                                                                />
+                                                                <CardBody className={classes.cardContent}>
+                                                                    <h4 className={classes.cardTitle}>{bread.name}</h4>
+                                                                    <p>{bread.description}</p>
+                                                                    <p>{bread.price}</p>
+                                                                </CardBody>
+                                                            </Pulse>
+                                                        </CardActionArea>
+                                                        <CardFooter className={classes.cardFooter}>
+                                                            <Button color="primary" value={bread.name} onClick={handleAddItem}>장바구니 담기</Button>
+                                                        </CardFooter>
+                                                    </Card>
+                                                </Grid>
+                                            ))}
+                                        </Grid>
                                     </div>
-                                </div>
-                            );
-                        }}
-                    </Animate>
+                                </CardBody>
+                            </Card>
+                        </div>
+                        <div className={classes.right}>
+                            <ShoppingCart
+                                itemlist={itemlist}
+                                tot={tot}
+                                increment={handleIncrement}
+                                decrement={handleDecrement}
+                                delItem={handleDelItem}
+                                addAlert={this.props.addAlert}
+                            />
+                        </div>
+                        <div className={classes.content}>
+                            <CustomTabs
+                                headerColor="primary"
+                                tabs={tabs}
+                            />
+                        </div>
                     </div>
-                    <img src=""/>
                 </main>
             </React.Fragment>
         );

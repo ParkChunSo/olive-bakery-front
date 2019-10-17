@@ -37,7 +37,7 @@ class MyPageModal extends React.Component {
         if(userData === undefined || userData === null || userData === ""){
             userData = {};
         }
-        
+
         this.setState({
             id: userData.id,
             name: userData.name,
@@ -45,7 +45,7 @@ class MyPageModal extends React.Component {
             male: userData.male,
             age: userData.age
         })
-    }
+    };
 
     putProfile = () => {
         axios.put('http://15.164.57.47:8080/olive/sign', {
@@ -58,7 +58,7 @@ class MyPageModal extends React.Component {
             //this.props.onReceive(response.data.number);
             if(response.status===200){
                 this.props.addAlert('프로필 수정완료');
-                this.resetProfile();
+                this.resetProfile();//이부분 바꿔야함
                 this.props.onClose();
             }
         });
@@ -68,15 +68,15 @@ class MyPageModal extends React.Component {
         this.setState({
             [e.target.id]: e.target.value
         });
-    };    
-    
+    };
+
 
     render() {
         if(this.props.isOpen===false)
             return null;
         const {userData} = this.props;
         console.log(userData);
-        
+
         return (
             <React.Fragment>
                 <Dialog
@@ -134,6 +134,7 @@ class MyPageModal extends React.Component {
                                 value: this.state.password,
                                 onChange: this.handleChange,
                                 required: true,
+                                placeholder: "****",
                                 endAdornment: (
                                     <InputAdornment position="end">
                                         <Lock /*className={classes.inputIconsColor}*//>
@@ -153,6 +154,7 @@ class MyPageModal extends React.Component {
                                 value: this.state.confirmPassword,
                                 onChange: this.handleChange,
                                 required: true,
+                                placeholder: "****",
                                 error: this.state.password!==this.state.confirmPassword,
                                 endAdornment: (
                                     <InputAdornment position="end">

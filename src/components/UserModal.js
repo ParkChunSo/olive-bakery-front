@@ -45,7 +45,7 @@ class UserModal extends React.Component {
             "email": this.state.email,
             "name": this.state.name,
             "phoneNumber": this.state.phoneNumber,
-            "pw": this.state.password,
+            "pw": "",
         }).then(response => {
             //this.props.onReceive(response.data.number);
             console.log(response);

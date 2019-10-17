@@ -14,6 +14,7 @@ import { cardTitle } from "../react-kit/assets/jss/material-kit-react.jsx";
 import "../react-kit/assets/scss/material-kit-react.scss"
 import Datetime, {Moment} from "react-datetime";
 import axios from "axios";
+import CardFooter from "../react-kit/components/Card/CardFooter.jsx";
 
 
 const style = {
@@ -28,9 +29,12 @@ const style = {
         fontWeight: "400",
         display: "inline-flex"
     },
+    cardFooter:{
+        marginRight: "auto",
+        marginLeft: "auto"
+    },
 };
 
-let email = null;
 
 class ShoppingCart extends React.Component {
     state = {
@@ -65,7 +69,6 @@ class ShoppingCart extends React.Component {
         this.email = storage.get('email');
         const token = storage.get('token');
         const {itemlist} = this.props;
-        
         axios.post('http://15.164.57.47:8080/olive/reservation', {
             "breadInfo": itemlist.map(item => ({"breadCount": item.count, "breadName": item.name})),
             "bringTime": datetime,
@@ -76,7 +79,6 @@ class ShoppingCart extends React.Component {
                 this.props.addAlert('예약 완료');
             }
         });
-
     };
 
     handleDateChange = (value) => {
@@ -116,7 +118,7 @@ class ShoppingCart extends React.Component {
         const { classes, itemlist, tot } = this.props;
         const { handleIncrement, handleDecrement, handleDelItem} = this;
         return (
-            <Card style={{width: "90%", marginLeft: "5%"}}>
+            <Card style={{width: "15%", height: "80%", position:"fixed"}}>
                 {/*<img
                     style={{height: "180px", width: "100%", display: "block"}}
                     className={classes.imgCardTop}
@@ -147,10 +149,12 @@ class ShoppingCart extends React.Component {
                         timeFormat="HH:mm"
                         onChange={this.handleDateChange}
                     />
+                </CardBody>
+                <CardFooter className={classes.cardFooter}>
                     <Button color="primary" onClick={this.postReservation}>
                         예약하기
                     </Button>
-                </CardBody>
+                </CardFooter>
             </Card>
         );
     }

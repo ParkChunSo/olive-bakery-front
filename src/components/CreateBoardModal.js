@@ -44,7 +44,7 @@ class CreateBoardModal extends React.Component {
     };
 
     postBoard = () => {
-        axios.post('http://15.164.57.47:8080/olive/board', {
+        axios.post('http://172.30.1.34:8080/olive/board', {
             "boardType": "BOARD",
             "boardId": 0,
             "context": this.state.context,

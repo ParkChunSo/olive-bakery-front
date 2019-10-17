@@ -1,17 +1,31 @@
 import React from 'react';
+import CustomInput from "../../react-kit/components/CustomInput/CustomInput.jsx";
 import Button from "../../react-kit/components/CustomButtons/Button.jsx";
 import axios from "axios";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import Email from "@material-ui/icons/Email";
+import People from "@material-ui/icons/People";
+import Lock from "@material-ui/icons/LockOutlined";
+import Phone from "@material-ui/icons/Phone";
+import Card from "../../react-kit/components/Card/Card.jsx";
+import CardBody from "../../react-kit/components/Card/CardBody.jsx";
+import CardHeader from "../../react-kit/components/Card/CardHeader.jsx";
+import CardFooter from "../../react-kit/components/Card/CardFooter.jsx";
 import withStyles from "@material-ui/core/styles/withStyles";
+import Face from "@material-ui/icons/Face";
 import CustomTabs from "../../react-kit/components/CustomTabs/CustomTabs.jsx";
 import Table from "../../react-dashboard/components/Table/Table.jsx";
 import BoardModal from "../BoardModal";
+
 import Pagination from "../../react-kit/components/Pagination/Pagination";
 import storage from "../../storage";
 import classNames from "classnames";
+import Checkbox from "@material-ui/core/Checkbox";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Check from "@material-ui/icons/Check";
 import checkStyles from "../../react-kit/assets/jss/material-kit-react/customCheckboxRadioSwitch";
+import {number} from "prop-types";
 import CreateBoardModal from "../CreateBoardModal";
-
-import * as api from "../../common/Api";
 
 const token = storage.get('token');
 let styles = {
@@ -106,9 +120,7 @@ class AdminBoard extends React.Component {
         let success = '공지사항 삭제완료: ';
         let fail = '실패: ';
         checkedList.map((board, index, array) => (
-            axios.delete(`http://15.164.57.47:8080/olive/board/id/${board.boardId}`,{
-                headers: { 'Content-type': 'application/json', 'Authorization': token}
-                }
+            axios.delete(`http://15.164.57.47:8080/olive/board/id/${board.boardId}`,{headers: { 'Content-type': 'application/json', 'Authorization': token}}
             ).then(response => {
                 if(response.status===200)
                     success = success+' '+board.boardId.toString();
@@ -126,42 +138,40 @@ class AdminBoard extends React.Component {
     };
 
     putBoard = (isNotice) => {
-        
-        // const {checkedList, boardType} = this.state;
-        // let success = '공지사항 변경완료: ';
-        // let fail = '실패: ';
-        // checkedList.map((board, index, array) => (
-        //     axios.get(`http://15.164.57.47:8080/olive/board/id/${board.boardId}`,{
-        //         headers: { 'Content-type': 'application/json', 'Authorization': token}
-        //         }
-        //     ).then(response => {
-        //         console.log(response.data);
-        //         if(response.status===200) {
-        //             axios.put('http://15.164.57.47:8080/olive/board', {
-        //                 headers: {'Content-type': 'application/json',},
-        //                 "boardId": response.data.boardId,
-        //                 "context": response.data.context,
-        //                 "boardType": boardType,
-        //                 "notice": isNotice,
-        //                 "secret": 'false',
-        //                 "title": response.data.title
-        //             }).then(response => {
-        //                 //this.props.onReceive(response.data.number);
-        //                 if(response.status===200)
-        //                     success = success+' '+board.boardId.toString();
-        //                 else
-        //                     fail = fail+' '+board.boardId.toString();
-        //                 if(index===array.length-1){
-        //                     fail !== '실패: ' ? this.props.addAlert(success+'\n'+fail) : this.props.addAlert(success);
-        //                     if(boardType==='board')
-        //                         this.handleClickPage(boardType, this.state.boardPage);
-        //                     else
-        //                         this.handleClickPage(boardType, this.state.qnaPage);
-        //                 }
-        //             });
-        //         }
-        //     })
-        // ));
+        const {checkedList, boardType} = this.state;
+        let success = '공지사항 변경완료: ';
+        let fail = '실패: ';
+        checkedList.map((board, index, array) => (
+            axios.get(`http://15.164.57.47:8080/olive/board/id/${board.boardId}`,{
+                    headers: { 'Content-type': 'application/json', 'Authorization': token}
+                }
+            ).then(response => {
+                //this.props.onReceive(response.data.number);
+                if(response.status===200) {
+                    axios.put('http://15.164.57.47:8080/olive/board', {
+                        "boardId": response.data.boardId,
+                        "context": response.data.context,
+                        "notice": isNotice,
+                        "secret": false,
+                        "title": response.data.title
+                    },
+                        {headers: { 'Content-type': 'application/json', 'Authorization': token}}).then(response => {
+                        //this.props.onReceive(response.data.number);
+                        if(response.status===200)
+                            success = success+' '+board.boardId.toString();
+                        else
+                            fail = fail+' '+board.boardId.toString();
+                        if(index===array.length-1){
+                            fail !== '실패: ' ? this.props.addAlert(success+'\n'+fail) : this.props.addAlert(success);
+                            if(boardType==='board')
+                                this.handleClickPage(boardType, this.state.boardPage);
+                            else
+                                this.handleClickPage(boardType, this.state.qnaPage);
+                        }
+                    });
+                }
+            })
+        ));
     };
 
     handleClickPage = (type,num) => {
@@ -175,7 +185,10 @@ class AdminBoard extends React.Component {
                     let endPage = 0;
                     if(parseInt(response.data.totalPages/11) === parseInt(num/11)) {
                         startPage = parseInt(num / 11)*10 + 1;
-                        endPage = startPage + response.data.totalPages % 11;
+                        if(startPage==1)
+                            endPage = startPage + response.data.totalPages % 11 -1;
+                        else
+                            endPage = startPage + response.data.totalPages % 11;
                     }
                     else{
                         startPage = parseInt(num /11)*10 +1;
@@ -202,7 +215,10 @@ class AdminBoard extends React.Component {
                     let endPage = 0;
                     if(parseInt(response.data.totalPages/11) === parseInt(num/11)) {
                         startPage = parseInt(num / 11)*10 + 1;
-                        endPage = startPage + response.data.totalPages % 11;
+                        if(startPage==1)
+                            endPage = startPage + response.data.totalPages % 11 -1;
+                        else
+                            endPage = startPage + response.data.totalPages % 11;
                     }
                     else{
                         startPage = parseInt(num /11)*10 +1;
@@ -375,7 +391,7 @@ class AdminBoard extends React.Component {
         const { board, qna, startPage, endPage, totalPage } = this.state;
         //let b = board.filter(board=> board.notice===false);
         let b = board.map(board => (
-           [board.boardId.toString(), (board.notice===true?'공지':''), board.title, board.userId, board.insertTime.toString(), board.checked]
+            [board.boardId.toString(), (board.notice===true?'공지':''), board.title, board.userId, board.insertTime.toString(), board.checked]
         ));
         const q = qna.map(qna => (
             [qna.boardId.toString(), qna.title, qna.userId, qna.insertTime.toString(), qna.checked]
@@ -416,6 +432,22 @@ class AdminBoard extends React.Component {
                     isAdmin={true}
                     addAlert={this.props.addAlert}
                 />
+                <Card>
+                    <CardHeader color="primary">
+                        <h4 className={classes.cardTitleWhite}>게시물 추가</h4>
+                        <p className={classes.cardCategoryWhite}>
+                            게시물 추가하시겠어요?
+                        </p>
+                    </CardHeader>
+                    <CardBody>
+
+                    </CardBody>
+                    <CardFooter className={classes.cardFooter}>
+                        <Button color="primary" onClick={this.toggleFormModal} simple size="lg">
+                            게시물 추가
+                        </Button>
+                    </CardFooter>
+                </Card>
                 <CustomTabs
                     headerColor="primary"
                     tabs={[
@@ -445,16 +477,13 @@ class AdminBoard extends React.Component {
                                         {pageNum}페이지
                                     </div>
                                     <div>
-                                        <Button color="primary" onClick={this.toggleFormModal} simple size="lg">
-                                            게시물 추가
-                                        </Button>
                                         <Button color="rose" onClick={this.deleteBoard} simple size="lg">
                                             게시물 삭제
                                         </Button>
-                                        <Button color="primary" onClick={()=>this.putBoard('true')} simple size="lg">
+                                        <Button color="primary" onClick={()=>this.putBoard(true)} simple size="lg">
                                             공지사항 등록
                                         </Button>
-                                        <Button color="info" onClick={()=>this.putBoard('false')} simple size="lg">
+                                        <Button color="info" onClick={()=>this.putBoard(false)} simple size="lg">
                                             공지사항 해제
                                         </Button>
                                     </div>
@@ -487,9 +516,6 @@ class AdminBoard extends React.Component {
                                         {pageNum}페이지
                                     </div>
                                     <div>
-                                        <Button color="primary" onClick={this.toggleFormModal} simple size="lg">
-                                            게시물 추가
-                                        </Button>
                                         <Button color="rose" onClick={this.deleteBoard} simple size="lg">
                                             게시물 삭제
                                         </Button>
