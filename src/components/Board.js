@@ -22,7 +22,7 @@ import Check from "@material-ui/icons/Check";
 import checkStyles from "../react-kit/assets/jss/material-kit-react/customCheckboxRadioSwitch";
 import {number} from "prop-types";
 import CreateBoardModal from "./CreateBoardModal";
-
+import * as api from "../common/Api"
 let styles = {
     cardCategoryWhite: {
         "&,& a,& a:hover,& a:focus": {
@@ -290,30 +290,28 @@ class Board extends React.Component {
     };
 
 
-    handleClickOpen = (id, type) => {
-        axios.get(`http://15.164.57.47:8080/olive/board/id/${id}`
-        ).then(response => {
-            //this.props.onReceive(response.data.number);
-            if(response.status===200) {
+    handleClickOpen = async (id, type) => {
+        await api.getBoardById(id).then(response => {
                 this.setState({
                     selectedItem: {
                         posts: {
-                            boardId: response.data.posts.boardId,
-                            context: response.data.posts.context,
-                            insertTime: response.data.posts.insertTime,
-                            notice: response.data.posts.notice,
-                            secret: response.data.posts.secret,
-                            title: response.data.posts.title,
-                            updateTime: response.data.posts.updateTime,
-                            userId: response.data.posts.userId
+                            boardId: response.data.boardId,
+                            context: response.data.context,
+                            insertTime: response.data.insertTime,
+                            notice: response.data.isNotice,
+                            secret: response.data.isSecret,
+                            title: response.data.title,
+                            updateTime: response.data.updateTime,
+                            userId: response.data.userId
                         },
-                        comments: response.data.comments
+                        comments: response.data.comments === undefined ? [] : response.data.comments
                     }
-                });
-            }
-        });
+                });    
+        })
+        
         if(type==='parent')
             this.toggleTableModal();
+        
     };
 
     render() {

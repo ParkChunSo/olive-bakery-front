@@ -110,12 +110,24 @@ export async function deleteBread(breadId, isDelete){
 
 ////////////////////// 게시판 관련 //////////////////////
 
-export async function getBoardById(boardId){
-    const response = await axios.get(url + `board/id/${boardId}`)
-    if(response.status === 200){
-        return response.data;
-    }
-    return null;
+export function getBoardById(boardId){
+    return axios.get(url + `board/id/${boardId}`, {headers: { 'Authorization': token}})
+}
+export function saveComment(boardId, userId, content, userName){
+    return axios.post(url + 'board/comment', {headers: {'Content-type': 'application/json','Authorization': token},
+        "boardId": boardId,
+        "content": content,
+        "updateTime": "null",
+        "userId": userId,
+        "userName": userName
+    });
+}
+
+////////////////////// 예약 관련 //////////////////////
+
+export function updateReservatioinState(reservationId){
+    return axios.put(`http://15.164.57.47:8080/olive/reservation/${reservationId}`
+        ,{},{headers: { 'Content-type': 'application/json', 'Authorization': token}});
 }
 
 ////////////////////// 그래프 관련 //////////////////////
@@ -165,4 +177,8 @@ export async function getGraphDataByYearAndMonth(year, month){
         return response.data;
     }
     return null;
+}
+
+export function saveOfflineSale(date, sales){
+    return axios.post(url + 'sales', {date: date, sales: sales}, {headers: { 'Authorization': token }});
 }

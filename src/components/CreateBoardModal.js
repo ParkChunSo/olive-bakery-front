@@ -48,8 +48,8 @@ class CreateBoardModal extends React.Component {
             "boardType": "BOARD",
             "boardId": 0,
             "context": this.state.context,
-            "notice": this.state.isNotice,
-            "secret": this.state.isSecret,
+            "isNotice": this.state.isNotice,
+            "isSecret": this.state.isSecret,
             "title": this.state.Title,
         },
             {headers: { 'Content-type': 'application/json', 'Authorization': token}}).then(response => {

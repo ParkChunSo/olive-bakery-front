@@ -35,6 +35,8 @@ let email = null;
 class ShoppingCart extends React.Component {
     state = {
         datetime: "",
+        dayValid: 0,
+        timeValid: 0,
         timeIsValid: false
     };
 
@@ -52,26 +54,29 @@ class ShoppingCart extends React.Component {
         delItem(e.target.value);
     };
     postReservation = () => {
+        const {timeValid, dayValid, datetime} = this.state;
+
+        if(timeValid<1000 || timeValid>2000 ){
+            console.log(timeValid);
+            this.props.addAlert('빵 수령시간이 잘못되었습니다. 수령시간은 10시-20시입니다');
+            return null;
+        }
+
         this.email = storage.get('email');
         const token = storage.get('token');
         const {itemlist} = this.props;
-        if(this.state.timeIsValid){
-            axios.post('http://15.164.57.47:8080/olive/reservation', {
-                "breadInfo": itemlist.map(item => ({"breadCount": item.count, "breadName": item.name})),
-                "bringTime": this.state.datetime,
-                "userEmail": this.email
-            },
-                {headers: { 'Content-type': 'application/json', 'Authorization': token}}).then(response => {
-                //this.props.onReceive(response.data.number);
-                console.log(response);
-                if(response.status===200) {
-                    this.props.addAlert('예약 완료');
-                }
-            });
-        }
-        else{
-            this.props.addAlert('예약시간이 잘못되었습니다. 수령시간은 10시-20시입니다');
-        }
+        
+        axios.post('http://15.164.57.47:8080/olive/reservation', {
+            "breadInfo": itemlist.map(item => ({"breadCount": item.count, "breadName": item.name})),
+            "bringTime": datetime,
+            "userEmail": this.email
+        },
+            {headers: { 'Content-type': 'application/json', 'Authorization': token}}).then(response => {
+            if(response.status===200) {
+                this.props.addAlert('예약 완료');
+            }
+        });
+
     };
 
     handleDateChange = (value) => {
@@ -80,23 +85,29 @@ class ShoppingCart extends React.Component {
             return null;
         }
         let date = value.format('YYYY-MM-DD HH:mm');
+        let day = parseInt(date.substring(5,7));
         let hour = date.substring(11,13);
         let min = date.substring(14,16);
         let time = parseInt(hour + min);
-        if(time<1000 || time>2000 ){
-            this.props.addAlert('예약시간이 잘못되었습니다. 수령시간은 10시-20시입니다');
-            this.setState({
-                datetime: "",
-                timeIsValid: false
-            });
-        }
-        else{
-            this.setState({
-                datetime: date,
-                timeIsValid: true
-            });
-        }
+
+        this.setState({
+            datetime: date,
+            dayValid: day,
+            timeValid: time,
+            timeIsValid: false
+        });
+        // if(time<1000 || time>2000 ){
+        //     this.props.addAlert('예약시간이 잘못되었습니다. 수령시간은 10시-20시입니다');
+            
+        // }
+        // else{
+        //     this.setState({
+        //         datetime: date,
+        //         timeIsValid: true
+        //     });
+        // }
     };
+
     yesterday = Datetime.moment().subtract(1, 'day');
     isValid = (current) => {
         return current.isAfter(this.yesterday);

@@ -7,6 +7,7 @@ import Select from '@material-ui/core/Select';
 import AdminChart from "./AdminChart"
 import AdminReservation from "./AdminReservation"
 import SelectDateBar from './SelectDateBar';
+import { Button } from '@material-ui/core';
 
 import * as api from "../../../common/Api"
 import Title from "../../../common/Title"
@@ -57,7 +58,7 @@ class AdminDashboard extends Component{
         }
 
         return date;
-    }
+    }   
 
     handleItemChange = (event) =>{
         const selectedDay = event.target.value;
@@ -68,6 +69,9 @@ class AdminDashboard extends Component{
         });
         
         this.getReservationDataByDate(this.convertDate2String(this.state.selectedYear, this.state.selectedMonth, selectedDay))
+    }
+    handleButtonClick = () =>{
+   
     }
 
     getReservationDataByDate = async (selectDate) =>{
@@ -151,12 +155,18 @@ class AdminDashboard extends Component{
                 <div>
                     <div className='chart-div'>
                         <div>
-                            <SelectDateBar
-                                selectedYear={selectedYear}
-                                selectedMonth = {selectedMonth}
-                                callBack= {this.callBackSelectBar}
-                            />
+                            <div>
+                                <SelectDateBar
+                                    selectedYear={selectedYear}
+                                    selectedMonth = {selectedMonth}
+                                    callBack= {this.callBackSelectBar}
+                                />
+                            </div>
+                            <div>
+                                <Button onClick = {this.handleButtonClick}>매출 등록 넣기</Button>
+                            </div>
                         </div>
+                        
                         <div>
                             <AdminChart
                                 chartData= {this.state.graphData}

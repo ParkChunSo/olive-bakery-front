@@ -14,7 +14,7 @@ import Lock from "@material-ui/icons/LockOutlined";
 import Phone from "@material-ui/icons/Phone";
 import "../react-kit/assets/scss/material-kit-react.scss"
 import Datetime, {Moment} from "react-datetime";
-
+import * as api from "../common/Api"
 class ReservationModal extends React.Component {
     state = {
         isUpdate: false,
@@ -100,19 +100,15 @@ class ReservationModal extends React.Component {
             }
         });
     };
-
     putReservationState = () => {
-        axios.put(`http://15.164.57.47:8080/olive/reservation/${this.props.item.reservationId}`,{
-            headers: { 'Content-type': 'application/json', },
-        }).then(response => {
+        api.updateReservatioinState(this.props.item.reservationId).then(response => {
             if(response.status===200) {
                 this.props.addAlert('예약상태 수정완료');
                 this.props.resetTable();
                 this.props.onClose();
-            }
-        });
+            }});
     };
-
+    
     delReservation = () => {
         axios.delete(`http://15.164.57.47:8080/olive/reservation/${this.props.item.reservationId}`,{
             headers: { 'Content-type': 'application/json', },
